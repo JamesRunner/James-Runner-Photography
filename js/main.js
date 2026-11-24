@@ -41,7 +41,7 @@ function setupVectorscope(){
     const dx=px-50,dy=py-50,distance=Math.hypot(dx,dy),limit=45;
     if(distance>limit){px=50+dx/distance*limit;py=50+dy/distance*limit}
     current={x:px,y:py};cursor.style.setProperty('--cursor-x',`${px}%`);cursor.style.setProperty('--cursor-y',`${py}%`);
-    const radius=Math.min(1,Math.hypot(px-50,py-50)/limit),hue=(Math.atan2(py-50,px-50)*180/Math.PI+390)%360;
+    const radius=Math.min(1,Math.hypot(px-50,py-50)/limit),hue=(-Math.atan2(py-50,px-50)*180/Math.PI+360)%360;
     cursor.style.setProperty('--cursor-color',radius>.06?`hsl(${hue} 72% 62%)`:'var(--pale)');
     signatures.forEach(item=>{item.distance=Math.hypot(item.x-px,item.y-py);item.button.classList.remove('is-match','is-second')});
     const nearby=[...signatures].sort((a,b)=>a.distance-b.distance);scope.classList.toggle('is-exploring',radius>.06);
@@ -57,7 +57,7 @@ function setupVectorscope(){
   FEATURED_PHOTOS.forEach((photo,index)=>{
     const button=document.createElement('button');button.className='scope-photo';button.dataset.lightboxCategory='featured';button.dataset.index=index;button.setAttribute('aria-label',`Open ${photo.alt}`);
     const img=new Image();img.src=photo.src;img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.decoding='async';
-    img.addEventListener('load',()=>{const signature=readColor(img),angle=(signature.hue-30)*Math.PI/180,radius=22+signature.saturation*20;let px=50+Math.cos(angle)*radius,py=50+Math.sin(angle)*radius;button.style.setProperty('--photo-color',signature.color);button.append(img,Object.assign(document.createElement('span'),{className:'scope-swatch'}));signatures.push({button,photo,x:px,y:py,targetX:px,targetY:py,color:signature.color});layoutPhotos();drawTrace();if(++loaded===FEATURED_PHOTOS.length){status.hidden=true;selectAt(50,50,false)}},{once:true});
+    img.addEventListener('load',()=>{const signature=readColor(img),angle=-signature.hue*Math.PI/180,radius=22+signature.saturation*20;let px=50+Math.cos(angle)*radius,py=50+Math.sin(angle)*radius;button.style.setProperty('--photo-color',signature.color);button.append(img,Object.assign(document.createElement('span'),{className:'scope-swatch'}));signatures.push({button,photo,x:px,y:py,targetX:px,targetY:py,color:signature.color});layoutPhotos();drawTrace();if(++loaded===FEATURED_PHOTOS.length){status.hidden=true;selectAt(50,50,false)}},{once:true});
     img.addEventListener('error',()=>{button.remove();if(++loaded===FEATURED_PHOTOS.length)status.hidden=true},{once:true});stage.append(button)
   })
 }
