@@ -36,18 +36,20 @@ function setupVectorscope(){
   const signatures=[];let loaded=0,dragging=false,current={x:50,y:50};
   const hueName=h=>h<20||h>=345?'Red':h<50?'Orange':h<75?'Yellow':h<155?'Green':h<195?'Cyan':h<255?'Blue':h<295?'Violet':'Magenta';
   const drawTrace=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);signatures.forEach((item,i)=>{for(let n=0;n<54;n++){const a=n*2.399+i,r=4+(n%11)*1.4,x=item.x/100*780+Math.cos(a)*r,y=item.y/100*780+Math.sin(a)*r;ctx.globalAlpha=.08+(n%5)*.035;ctx.fillStyle=item.color;ctx.beginPath();ctx.arc(x,y,1+(n%3)*.35,0,Math.PI*2);ctx.fill()}});ctx.globalAlpha=1};
+  const layoutPhotos=()=>{signatures.forEach(item=>{item.x=item.targetX;item.y=item.targetY});for(let pass=0;pass<30;pass++){for(let i=0;i<signatures.length;i++)for(let j=i+1;j<signatures.length;j++){const a=signatures[i],b=signatures[j],dx=(b.x-a.x)/14,dy=(b.y-a.y)/9,d=Math.hypot(dx,dy);if(d<1){const angle=d>.01?Math.atan2(dy,dx):(i+j)*1.7,push=(1-d)*1.1;a.x-=Math.cos(angle)*push;a.y-=Math.sin(angle)*push*.65;b.x+=Math.cos(angle)*push;b.y+=Math.sin(angle)*push*.65}}}signatures.forEach(item=>{const dx=item.x-50,dy=item.y-50,d=Math.hypot(dx,dy);if(d>43){item.x=50+dx/d*43;item.y=50+dy/d*43}item.button.style.setProperty('--x',`${item.x}%`);item.button.style.setProperty('--y',`${item.y}%`)})};
   const selectAt=(px,py,announce=true)=>{
     const dx=px-50,dy=py-50,distance=Math.hypot(dx,dy),limit=45;
     if(distance>limit){px=50+dx/distance*limit;py=50+dy/distance*limit}
     current={x:px,y:py};cursor.style.setProperty('--cursor-x',`${px}%`);cursor.style.setProperty('--cursor-y',`${py}%`);
     const radius=Math.min(1,Math.hypot(px-50,py-50)/limit),hue=(Math.atan2(py-50,px-50)*180/Math.PI+390)%360;
+    cursor.style.setProperty('--cursor-color',radius>.06?`hsl(${hue} 72% 62%)`:'var(--pale)');
     signatures.forEach(item=>{item.distance=Math.hypot(item.x-px,item.y-py);item.button.classList.remove('is-match','is-second')});
     const nearby=[...signatures].sort((a,b)=>a.distance-b.distance);scope.classList.toggle('is-exploring',radius>.06);
-    if(radius>.06){nearby[0]?.button.classList.add('is-match');nearby[1]?.button.classList.add('is-second');nearby[2]?.button.classList.add('is-second');readout.hidden=true;result.hidden=false;if(nearby[0]){resultImage.src=nearby[0].photo.src;resultImage.alt=nearby[0].photo.alt;resultLabel.textContent=`${hueName(hue)} · ${Math.round(radius*100)}%`}if(announce)cursor.setAttribute('aria-label',`${hueName(hue)}, ${Math.round(radius*100)} percent intensity. Closest image: ${nearby[0]?.photo.alt||'none'}`)}
+    if(radius>.06){nearby[0]?.button.classList.add('is-match');nearby[1]?.button.classList.add('is-second');nearby[2]?.button.classList.add('is-second');readout.hidden=true;result.hidden=false;if(nearby[0]){resultImage.src=nearby[0].photo.src;resultImage.alt=nearby[0].photo.alt;resultLabel.textContent=`${hueName(hue)} · ${Math.round(radius*100)}%`;result.dataset.index=FEATURED_PHOTOS.indexOf(nearby[0].photo);result.setAttribute('aria-label',`Open ${nearby[0].photo.alt}`)}if(announce)cursor.setAttribute('aria-label',`${hueName(hue)}, ${Math.round(radius*100)} percent intensity. Closest image: ${nearby[0]?.photo.alt||'none'}`)}
     else{result.hidden=true;readout.hidden=false;readout.innerHTML='<strong>Neutral tones</strong><span>Drag toward a color</span>';if(announce)cursor.setAttribute('aria-label','Neutral color selector. Use arrow keys to move.')}
   };
   const pointFromEvent=e=>{const rect=scope.getBoundingClientRect();return{x:(e.clientX-rect.left)/rect.width*100,y:(e.clientY-rect.top)/rect.height*100}};
-  scope.addEventListener('pointerdown',e=>{if(e.target.closest('.scope-photo'))return;dragging=true;scope.setPointerCapture(e.pointerId);const p=pointFromEvent(e);selectAt(p.x,p.y)});
+  scope.addEventListener('pointerdown',e=>{if(e.target.closest('.scope-photo,.scope-result'))return;dragging=true;scope.setPointerCapture(e.pointerId);const p=pointFromEvent(e);selectAt(p.x,p.y)});
   scope.addEventListener('pointermove',e=>{if(!dragging)return;const p=pointFromEvent(e);selectAt(p.x,p.y,false)});
   scope.addEventListener('pointerup',e=>{dragging=false;const p=pointFromEvent(e);selectAt(p.x,p.y)});
   scope.addEventListener('pointercancel',()=>dragging=false);
@@ -55,7 +57,7 @@ function setupVectorscope(){
   FEATURED_PHOTOS.forEach((photo,index)=>{
     const button=document.createElement('button');button.className='scope-photo';button.dataset.lightboxCategory='featured';button.dataset.index=index;button.setAttribute('aria-label',`Open ${photo.alt}`);
     const img=new Image();img.src=photo.src;img.alt=photo.alt;img.width=photo.width;img.height=photo.height;img.decoding='async';
-    img.addEventListener('load',()=>{const signature=readColor(img),angle=(signature.hue-30)*Math.PI/180,radius=19+signature.saturation*24;let px=50+Math.cos(angle)*radius,py=50+Math.sin(angle)*radius;const nudge=(index%3-1)*3;px+=Math.cos(angle+Math.PI/2)*nudge;py+=Math.sin(angle+Math.PI/2)*nudge;button.style.setProperty('--x',`${px}%`);button.style.setProperty('--y',`${py}%`);button.style.setProperty('--photo-color',signature.color);button.append(img,Object.assign(document.createElement('span'),{className:'scope-swatch'}));signatures.push({button,photo,x:px,y:py,color:signature.color});drawTrace();if(++loaded===FEATURED_PHOTOS.length){status.hidden=true;selectAt(50,50,false)}},{once:true});
+    img.addEventListener('load',()=>{const signature=readColor(img),angle=(signature.hue-30)*Math.PI/180,radius=22+signature.saturation*20;let px=50+Math.cos(angle)*radius,py=50+Math.sin(angle)*radius;button.style.setProperty('--photo-color',signature.color);button.append(img,Object.assign(document.createElement('span'),{className:'scope-swatch'}));signatures.push({button,photo,x:px,y:py,targetX:px,targetY:py,color:signature.color});layoutPhotos();drawTrace();if(++loaded===FEATURED_PHOTOS.length){status.hidden=true;selectAt(50,50,false)}},{once:true});
     img.addEventListener('error',()=>{button.remove();if(++loaded===FEATURED_PHOTOS.length)status.hidden=true},{once:true});stage.append(button)
   })
 }
