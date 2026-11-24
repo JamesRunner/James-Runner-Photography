@@ -2,9 +2,9 @@ const PHOTO_DATA={
   couples:[
     ["portfolio/couples-01.jpg",1800,1200],["portfolio/couples-02.jpg",1800,1200],["portfolio/couples-03.jpg",1800,1239],["portfolio/couples-04.jpg",1800,1221],["portfolio/couples-05.jpg",1800,1200],["portfolio/couples-06.jpg",1200,1800],["portfolio/couples-07.jpg",1200,1800],["portfolio/couples-08.jpg",1200,1800],["portfolio/couples-09.jpg",1800,1346],["portfolio/couples-10.jpg",1200,1800],["portfolio/couples-11.jpg",1200,1800],["portfolio/couples-12.jpg",1200,1800]],
   landscapes:[
-    ["portfolio/landscapes-01.jpg",1800,1200],["portfolio/landscapes-02.jpg",1800,1200],["portfolio/landscapes-03.jpg",1800,1200],["portfolio/landscapes-04.jpg",1800,1200],["portfolio/landscapes-05.jpg",1800,1200],["portfolio/landscapes-06.jpg",1800,1200],["portfolio/landscapes-07.jpg",1800,1200],["portfolio/landscapes-08.jpg",1800,1200],["portfolio/landscapes-09.jpg",1800,1200],["portfolio/landscapes-10.jpg",1800,1200],["portfolio/landscapes-11.jpg",1800,1293],["portfolio/landscapes-12.jpg",1200,1800]]
+    ["portfolio/landscapes-01.jpg",1800,1200],["portfolio/landscapes-02.jpg",1800,1200],["portfolio/landscapes-03.jpg",1800,1200],["portfolio/landscapes-04.jpg",1800,1200],["portfolio/landscapes-05.jpg",1800,1200],["portfolio/landscapes-06.jpg",1800,1200],["portfolio/landscapes-07.jpg",1800,1200],["portfolio/landscapes-08.jpg",1800,1200],["portfolio/landscapes-10.jpg",1800,1200]]
 };
-const LABELS={couples:"Couples",landscapes:"Landscapes"};
+const LABELS={couples:"Couples",landscapes:"Field Notes"};
 const FEATURED_PHOTOS=[...PHOTO_DATA.couples.map((item,index)=>photoObject("couples",item,index)),...PHOTO_DATA.landscapes.map((item,index)=>photoObject("landscapes",item,index))].map((photo,index)=>({...photo,category:"featured",label:`Selected photograph ${index+1}`}));
 const cameraIcon='<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 15h9l3-5h12l3 5h9v25H6z"/><circle cx="24" cy="27" r="8"/></svg>';
 function photoObject(category,item,index){return{src:`images/${item[0]}`,category,width:item[1],height:item[2],alt:`${LABELS[category]} photograph ${String(index+1).padStart(2,'0')} by James Runner`,label:`${LABELS[category]} photo ${String(index+1).padStart(2,'0')}`}}
