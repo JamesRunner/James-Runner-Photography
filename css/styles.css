@@ -63,5 +63,10 @@
 @media(max-width:1080px){.darkroom-home .scope-hero{grid-template-columns:1fr;padding-top:132px}.darkroom-home .scope-intro{max-width:720px}.darkroom-home .scope-intro h1{max-width:10ch}.darkroom-home .vectorscope{width:min(88vw,760px)}}
 @media(max-width:720px){.darkroom-home .scope-hero{padding:108px 20px 54px}.darkroom-home .scope-intro h1{font-size:clamp(3.4rem,16vw,5.4rem)}.darkroom-home .vectorscope{width:calc(100vw - 48px)}.darkroom-home .scope-result{width:min(65vw,270px)}.darkroom-home .scope-axis{font-size:0}.darkroom-home .scope-axis i{width:9px;height:9px}.darkroom-home .scope-note{display:block;text-align:left}.darkroom-home .scope-note span{display:block;margin:4px 0}.darkroom-home .scope-note span+span:before{display:none}.roll-heading{display:block}.roll-heading a{display:inline-block;margin-top:18px}.contact-sheet{grid-template-columns:1fr;gap:30px}.contact-frame:last-child{grid-column:auto;width:100%}}
 
+/* Two-category portfolio */
+.darkroom-home .quiet-grid,.services.services-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.contact-sheet .contact-frame:last-child{grid-column:auto;width:auto;justify-self:stretch}
+@media(max-width:720px){.darkroom-home .quiet-grid,.services.services-two{grid-template-columns:1fr}}
+
 
 
