@@ -29,13 +29,17 @@
         <div class="actions"><a class="button primary" href="portfolio.html">View portfolio</a><a class="button light" href="contact.html">Get in touch</a></div>
       </div>
       <div class="vectorscope-wrap">
-        <div class="vectorscope-heading"><p><strong>Selected work, sorted by color</strong></p><p>Choose a photograph to open it.</p></div>
-        <div class="vectorscope" data-vectorscope aria-label="Selected photographs arranged by dominant color">
+        <div class="vectorscope-heading"><p><strong>Explore selected work by color</strong></p><p>Drag through the scope.</p></div>
+        <div class="vectorscope" data-vectorscope aria-label="Interactive color scope. Drag the selector to find photographs with matching colors.">
           <div class="scope-ring ring-one" aria-hidden="true"></div><div class="scope-ring ring-two" aria-hidden="true"></div><div class="scope-crosshair" aria-hidden="true"></div>
           <span class="scope-axis axis-r" aria-hidden="true">R</span><span class="scope-axis axis-y" aria-hidden="true">Y</span><span class="scope-axis axis-g" aria-hidden="true">G</span><span class="scope-axis axis-c" aria-hidden="true">C</span><span class="scope-axis axis-b" aria-hidden="true">B</span><span class="scope-axis axis-m" aria-hidden="true">M</span>
-          <div class="scope-photos" data-scope-photos></div><p class="scope-status" data-scope-status aria-live="polite">Reading the color in each frame…</p>
+          <canvas class="scope-trace" data-scope-trace width="780" height="780" aria-hidden="true"></canvas>
+          <div class="scope-photos" data-scope-photos></div>
+          <button class="scope-cursor" data-scope-cursor type="button" aria-label="Color selector. Use arrow keys to move." style="--cursor-x:50%;--cursor-y:50%"><span></span></button>
+          <div class="scope-readout" data-scope-readout aria-live="polite"><strong>Neutral tones</strong><span>Drag toward a color</span></div>
+          <p class="scope-status" data-scope-status aria-live="polite">Reading the color in each frame…</p>
         </div>
-        <p class="scope-note">Distance from the center shows color intensity. Angle shows the dominant hue.</p>
+        <p class="scope-note">Center means neutral. Move outward for stronger color. Choose a highlighted frame to open it.</p>
       </div>
     </section>
     <section class="section scope-explainer"><div class="container split-copy"><h2>Every frame has a color signature.</h2><div><p>This field reads each photograph and places it by its dominant hue. Warm light drifts one way. Blue sky, deep water, and green forest move another.</p><p>It is a different way to browse a portfolio: start with the color that pulls you in.</p></div></div></section>
