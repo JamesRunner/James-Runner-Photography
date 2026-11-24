@@ -32,7 +32,7 @@ function readColor(img){const canvas=document.createElement('canvas'),ctx=canvas
 function setupVectorscope(){
   const scope=document.querySelector('[data-vectorscope]'),stage=document.querySelector('[data-scope-photos]');
   if(!scope||!stage)return;
-  const status=document.querySelector('[data-scope-status]'),cursor=document.querySelector('[data-scope-cursor]'),readout=document.querySelector('[data-scope-readout]'),canvas=document.querySelector('[data-scope-trace]'),ctx=canvas.getContext('2d');
+  const status=document.querySelector('[data-scope-status]'),cursor=document.querySelector('[data-scope-cursor]'),readout=document.querySelector('[data-scope-readout]'),result=document.querySelector('[data-scope-result]'),resultImage=document.querySelector('[data-scope-result-image]'),resultLabel=document.querySelector('[data-scope-result-label]'),canvas=document.querySelector('[data-scope-trace]'),ctx=canvas.getContext('2d');
   const signatures=[];let loaded=0,dragging=false,current={x:50,y:50};
   const hueName=h=>h<20||h>=345?'Red':h<50?'Orange':h<75?'Yellow':h<155?'Green':h<195?'Cyan':h<255?'Blue':h<295?'Violet':'Magenta';
   const drawTrace=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);signatures.forEach((item,i)=>{for(let n=0;n<54;n++){const a=n*2.399+i,r=4+(n%11)*1.4,x=item.x/100*780+Math.cos(a)*r,y=item.y/100*780+Math.sin(a)*r;ctx.globalAlpha=.08+(n%5)*.035;ctx.fillStyle=item.color;ctx.beginPath();ctx.arc(x,y,1+(n%3)*.35,0,Math.PI*2);ctx.fill()}});ctx.globalAlpha=1};
@@ -43,8 +43,8 @@ function setupVectorscope(){
     const radius=Math.min(1,Math.hypot(px-50,py-50)/limit),hue=(Math.atan2(py-50,px-50)*180/Math.PI+390)%360;
     signatures.forEach(item=>{item.distance=Math.hypot(item.x-px,item.y-py);item.button.classList.remove('is-match','is-second')});
     const nearby=[...signatures].sort((a,b)=>a.distance-b.distance);scope.classList.toggle('is-exploring',radius>.06);
-    if(radius>.06){nearby[0]?.button.classList.add('is-match');nearby[1]?.button.classList.add('is-second');nearby[2]?.button.classList.add('is-second');readout.innerHTML=`<strong>${hueName(hue)}</strong><span>${Math.round(radius*100)}% color intensity</span>`;if(announce)cursor.setAttribute('aria-label',`${hueName(hue)}, ${Math.round(radius*100)} percent intensity. Closest image: ${nearby[0]?.photo.alt||'none'}`)}
-    else{readout.innerHTML='<strong>Neutral tones</strong><span>Drag toward a color</span>';if(announce)cursor.setAttribute('aria-label','Neutral color selector. Use arrow keys to move.')}
+    if(radius>.06){nearby[0]?.button.classList.add('is-match');nearby[1]?.button.classList.add('is-second');nearby[2]?.button.classList.add('is-second');readout.hidden=true;result.hidden=false;if(nearby[0]){resultImage.src=nearby[0].photo.src;resultImage.alt=nearby[0].photo.alt;resultLabel.textContent=`${hueName(hue)} · ${Math.round(radius*100)}%`}if(announce)cursor.setAttribute('aria-label',`${hueName(hue)}, ${Math.round(radius*100)} percent intensity. Closest image: ${nearby[0]?.photo.alt||'none'}`)}
+    else{result.hidden=true;readout.hidden=false;readout.innerHTML='<strong>Neutral tones</strong><span>Drag toward a color</span>';if(announce)cursor.setAttribute('aria-label','Neutral color selector. Use arrow keys to move.')}
   };
   const pointFromEvent=e=>{const rect=scope.getBoundingClientRect();return{x:(e.clientX-rect.left)/rect.width*100,y:(e.clientY-rect.top)/rect.height*100}};
   scope.addEventListener('pointerdown',e=>{if(e.target.closest('.scope-photo'))return;dragging=true;scope.setPointerCapture(e.pointerId);const p=pointFromEvent(e);selectAt(p.x,p.y)});
