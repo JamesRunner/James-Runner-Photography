@@ -9,7 +9,7 @@
   <meta property="og:image" content="https://jamesrunnerphotography.com/images/og-share.jpg"><meta property="og:url" content="https://jamesrunnerphotography.com/"><meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css"><script src="js/main.js" defer></script>
+  <link rel="stylesheet" href="css/styles.css?v=20261123-3"><script src="js/main.js?v=20261123-3" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"James Runner Photography","url":"https://jamesrunnerphotography.com/","email":"jamescooperrunner@gmail.com","areaServed":"Riverside, California","sameAs":["https://www.instagram.com/jamesrunner.photography/"]}</script>
 </head>
 <body class="home-page scope-home">
@@ -37,6 +37,10 @@
           <div class="scope-photos" data-scope-photos></div>
           <button class="scope-cursor" data-scope-cursor type="button" aria-label="Color selector. Use arrow keys to move." style="--cursor-x:50%;--cursor-y:50%"><span></span></button>
           <div class="scope-readout" data-scope-readout aria-live="polite"><strong>Neutral tones</strong><span>Drag toward a color</span></div>
+          <figure class="scope-result" data-scope-result hidden>
+            <img data-scope-result-image src="" alt="">
+            <figcaption><span>Closest color match</span><strong data-scope-result-label></strong></figcaption>
+          </figure>
           <p class="scope-status" data-scope-status aria-live="polite">Reading the color in each frame…</p>
         </div>
         <p class="scope-note">Center means neutral. Move outward for stronger color. Choose a highlighted frame to open it.</p>
