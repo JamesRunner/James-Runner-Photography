@@ -110,6 +110,7 @@ h1,h2,h3{letter-spacing:-.025em}.page-hero{position:relative;overflow:hidden;bac
 .about-portrait img{object-position:45% center}
 @media(max-width:900px) and (min-width:721px){.photos-page .masonry{grid-template-columns:repeat(2,minmax(0,1fr))}.photos-page .proof-frame:last-child:nth-child(odd){grid-column:1/-1;width:calc(50% - 9px);justify-self:center}}
 @media(max-width:720px){.photos-page .masonry{grid-template-columns:1fr}.photos-page .proof-frame:nth-child(n){transform:none}}
+.photo-slot{margin:0}
 
 
 
